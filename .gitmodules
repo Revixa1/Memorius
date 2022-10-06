@@ -1,6 +1,0 @@
-[submodule "Memorius/include/LibRobUS"]
-	path = Memorius/include/LibRobUS
-	url = https://github.com/UdeS-GRO/LibRobUS.git
-[submodule "Memorius/lib/LibRobus"]
-	path = Memorius/lib/LibRobus
-	url = https://github.com/UdeS-GRO/LibRobUS.git
