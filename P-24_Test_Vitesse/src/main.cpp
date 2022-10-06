@@ -28,7 +28,7 @@ void loop()
     deplacement(0,720);
     deplacement(0,-360);
     */
-   /*
+   
     deplacement(0,-180);
     deplacement(0,360);
     deplacement(0,-180);
@@ -43,11 +43,11 @@ void loop()
     deplacement(0,90);
     delay(500);
     deplacement(0,-45);
-    */
+    
     
     //deplacement(0,1440);
     //deplacement(500,0);
-    
+    /*
     deplacement(122.5, 0);  // déplacement de 0° en rotation et de 122.5 cm vers l'avant
     deplacement(95, -90);   // déplacement de -90° (70° vers la gauche) en rotation et de 95 cm vers l'avant
     deplacement(102, 90);   // déplacement de 90° (90° vers la droite) en rotation et de 102 cm vers l'avant
@@ -60,7 +60,7 @@ void loop()
     deplacement(90, -40.4);
     deplacement(95, -90);
     deplacement(115, 90);
-    
+    */
     
     
   }
@@ -93,11 +93,11 @@ void deplacement(float distance, float angle)
   int encodeur_actuel=0;  //déclaration + reset du ProcessValue du PID
   int erreur_KP = 0;      //déclaration + reset de l'erreur proportionnel du PID
   int erreur_KI = 0;      //déclaration + reset de l'erreur intégrale du PID
-  float KP = 0.0000001;       //Valeur pour tunner le gain proportionnelle du PID
-  float KI = 0.000001;           //Valeur pour tunner le gain de l'intégrale du PID
+  float KP = 0.000000001;       //Valeur pour tunner le gain proportionnelle du PID
+  float KI = 0;//0.00000001;           //Valeur pour tunner le gain de l'intégrale du PID
   float ajout_de_vitesse = 0; //déclaration + reset de la réponse du PID
   int cycle = 1;          //déclaration + reset du nombre de cycles du PID
-
+  int briser=0;
   if (angle != 0)
   {
     ENCODER_Reset(0); //on reset les encodeurs avant de bouger
@@ -106,10 +106,10 @@ void deplacement(float distance, float angle)
     MOTOR_SetSpeed(1, -1 * sens_rotation * vitesse);//Angle positif = vitesse roue droite est négative
 
     if(sens_rotation>0){
-      while (somme_pulse_droit <= arc_en_pulse)//tant que la distance de l'arc n'est pas atteinte, on continue la rotation
+      while (somme_pulse_gauche <= arc_en_pulse)//tant que la distance de l'arc n'est pas atteinte, on continue la rotation
     {
       MOTOR_SetSpeed(0, sens_rotation * (vitesse + ajout_de_vitesse));//on change la vitesse du moteur gauche selon la réponse du PID
-      while(50>ENCODER_Read(1) && 100>-1*ENCODER_Read(1)){}//on attend au moins 100 pulse du moteur droit avant d'entrer dans le PID
+      while(50>ENCODER_Read(1) && 50>-1*ENCODER_Read(1) && briser<arc_en_pulse){briser= ENCODER_Read(0)+somme_pulse_gauche;}//on attend au moins 100 pulse du moteur droit avant d'entrer dans le PID
 
       //Section PID
       encodeur_voulu = (-1*sens_rotation*ENCODER_ReadReset(1));//lire la distance parcourue par la roue droite depuis le dernier reset. La valeur sera toujour positive
@@ -139,13 +139,13 @@ void deplacement(float distance, float angle)
     while (somme_pulse_gauche <= arc_en_pulse)//tant que la distance de l'arc n'est pas atteinte, on continue la rotation
     {
       MOTOR_SetSpeed(0, sens_rotation * (vitesse + ajout_de_vitesse));//on change la vitesse du moteur gauche selon la réponse du PID
-      while(50>ENCODER_Read(1) && 100>-1*ENCODER_Read(1)){}//on attend au moins 100 pulse du moteur droit avant d'entrer dans le PID
+      while(50>ENCODER_Read(1) && 50>-1*ENCODER_Read(1) && briser<arc_en_pulse){briser= ENCODER_Read(0)+somme_pulse_gauche;}//on attend au moins 100 pulse du moteur droit avant d'entrer dans le PID
 
       //Section PID
       encodeur_voulu = (-1*sens_rotation*ENCODER_ReadReset(1));//lire la distance parcourue par la roue droite depuis le dernier reset. La valeur sera toujour positive
       encodeur_actuel =  sens_rotation*ENCODER_ReadReset(0);//lire la distance parcourue par la roue gauche depuis le dernier reset. La valeur sera toujour positive
       erreur_KP = encodeur_voulu - encodeur_actuel;//on calcule l'erreur proportionnelle
-      //somme_pulse_droit= somme_pulse_droit + encodeur_voulu;
+      somme_pulse_droit= somme_pulse_droit + encodeur_voulu;
       somme_pulse_gauche = somme_pulse_gauche + encodeur_actuel;//on trouve notre distance complète depuis le début du déplacement
       erreur_KI = (cycle * encodeur_voulu) - somme_pulse_gauche;//on calcule l'erreur de l'intégralle entre les deux courbes
       ajout_de_vitesse = KI * erreur_KI + KP * erreur_KP;//on calcule la réponse de la boucle PID. ICI nous avons seulment une réponse qui travaile sur le gain proportionnel et sur l'intégralle du procédé
@@ -171,8 +171,14 @@ void deplacement(float distance, float angle)
   
   Serial.print("  somme_pulse_gauche_rotation:  ");
   Serial.print(somme_pulse_gauche);
-  Serial.print("  Diff=  ");
-  Serial.println(arc_en_pulse-somme_pulse_gauche);
+  Serial.print("  somme_pulse_droit_rotation:  ");
+  Serial.print(somme_pulse_droit);
+  Serial.print("  Diff_gauche=  ");
+  Serial.print(arc_en_pulse-somme_pulse_gauche);
+  Serial.print("  Diff_droit=  ");
+  Serial.print(arc_en_pulse-somme_pulse_droit);
+  Serial.print("  Diff_drpoit_gauche=  ");
+  Serial.println(somme_pulse_droit-somme_pulse_gauche);
   // delay(1000);
   vitesse = 0.2; // vitesse de départ lors d'une ligne droite
   acceleration=vitesse; //variable pour l'accélération lors d'une ligne droite
