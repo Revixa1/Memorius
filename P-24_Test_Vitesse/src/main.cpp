@@ -106,10 +106,10 @@ void deplacement(float distance, float angle)
     MOTOR_SetSpeed(1, -1 * sens_rotation * vitesse);//Angle positif = vitesse roue droite est négative
 
     if(sens_rotation>0){
-      while (somme_pulse_gauche <= arc_en_pulse)//tant que la distance de l'arc n'est pas atteinte, on continue la rotation
+      while (somme_pulse_droit <= arc_en_pulse)//tant que la distance de l'arc n'est pas atteinte, on continue la rotation
     {
       MOTOR_SetSpeed(0, sens_rotation * (vitesse + ajout_de_vitesse));//on change la vitesse du moteur gauche selon la réponse du PID
-      while(50>ENCODER_Read(1) && 50>-1*ENCODER_Read(1) && briser<arc_en_pulse){briser= ENCODER_Read(0)+somme_pulse_gauche;}//on attend au moins 100 pulse du moteur droit avant d'entrer dans le PID
+      while(50>ENCODER_Read(1) && 50>-1*ENCODER_Read(1) && briser<arc_en_pulse){briser= ENCODER_Read(1)+somme_pulse_droit;}//on attend au moins 100 pulse du moteur droit avant d'entrer dans le PID
 
       //Section PID
       encodeur_voulu = (-1*sens_rotation*ENCODER_ReadReset(1));//lire la distance parcourue par la roue droite depuis le dernier reset. La valeur sera toujour positive
@@ -136,10 +136,10 @@ void deplacement(float distance, float angle)
 
     }
     else{
-    while (somme_pulse_gauche <= arc_en_pulse)//tant que la distance de l'arc n'est pas atteinte, on continue la rotation
+    while (somme_pulse_droit <= arc_en_pulse)//tant que la distance de l'arc n'est pas atteinte, on continue la rotation
     {
       MOTOR_SetSpeed(0, sens_rotation * (vitesse + ajout_de_vitesse));//on change la vitesse du moteur gauche selon la réponse du PID
-      while(50>ENCODER_Read(1) && 50>-1*ENCODER_Read(1) && briser<arc_en_pulse){briser= ENCODER_Read(0)+somme_pulse_gauche;}//on attend au moins 100 pulse du moteur droit avant d'entrer dans le PID
+      while(50>ENCODER_Read(1) && 50>-1*ENCODER_Read(1) && briser<arc_en_pulse){briser= ENCODER_Read(1)+somme_pulse_droit;}//on attend au moins 100 pulse du moteur droit avant d'entrer dans le PID
 
       //Section PID
       encodeur_voulu = (-1*sens_rotation*ENCODER_ReadReset(1));//lire la distance parcourue par la roue droite depuis le dernier reset. La valeur sera toujour positive
