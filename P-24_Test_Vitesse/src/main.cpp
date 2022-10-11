@@ -51,13 +51,13 @@ void loop()
     deplacement(122.5, 0);  // déplacement de 0° en rotation et de 122.5 cm vers l'avant
     deplacement(95, -90);   // déplacement de -90° (70° vers la gauche) en rotation et de 95 cm vers l'avant
     deplacement(100, 90);   // déplacement de 90° (90° vers la droite) en rotation et de 102 cm vers l'avant
-    deplacement(170, 40); // déplacement de 40.4° (40.4° vers la gauche) en rotation et de 180 cm vers l'avant
+    deplacement(175, 40.4); // déplacement de 40.4° (40.4° vers la gauche) en rotation et de 180 cm vers l'avant
     deplacement(60, -90);
     deplacement(80, 45);
     deplacement(80, -180);
     deplacement(60, -45);
     deplacement(180, 90);
-    deplacement(90, -40);
+    deplacement(90, -40.4);
     deplacement(95, -90);
     deplacement(115, 90);
     
