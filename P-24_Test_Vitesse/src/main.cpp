@@ -2,7 +2,7 @@
 #include <librobus.h>
 #include <math.h>
 
-#define CIRCONFERENCE_ENTRE_2_ROUES (18.60000000000000000000000000 * PI) // la circonférence en cm du cercle fait par les deux roues lors d'une rotation de 1 tour
+#define CIRCONFERENCE_ENTRE_2_ROUES (18.80000000000000000000000000 * PI) // la circonférence en cm du cercle fait par les deux roues lors d'une rotation de 1 tour
 #define PULSE_PAR_CM (3200.0000 / 23.9389000000000000000000000000)         // nombre de pulse par tour/circonférence d'une roue en cm
 #define TOUR_DEGRE 360.0000                          // nombre de degré dans 1 tour
 
@@ -28,7 +28,7 @@ void loop()
     deplacement(0,720);
     deplacement(0,-360);
     */
-   
+   /*
     deplacement(0,-180);
     deplacement(0,360);
     deplacement(0,-180);
@@ -43,25 +43,25 @@ void loop()
     deplacement(0,90);
     delay(500);
     deplacement(0,-45);
-    
+    */
     //deplacement(0,1440);
    // deplacement(0,-1440);
     //deplacement(500,0);
-    /*
+    
     deplacement(122.5, 0);  // déplacement de 0° en rotation et de 122.5 cm vers l'avant
-    deplacement(95, -89);   // déplacement de -90° (70° vers la gauche) en rotation et de 95 cm vers l'avant
-    deplacement(100, 89);   // déplacement de 90° (90° vers la droite) en rotation et de 102 cm vers l'avant
-    deplacement(170, 47); // déplacement de 40.4° (40.4° vers la gauche) en rotation et de 180 cm vers l'avant
+    deplacement(95, -90);   // déplacement de -90° (70° vers la gauche) en rotation et de 95 cm vers l'avant
+    deplacement(100, 90);   // déplacement de 90° (90° vers la droite) en rotation et de 102 cm vers l'avant
+    deplacement(170, 40); // déplacement de 40.4° (40.4° vers la gauche) en rotation et de 180 cm vers l'avant
     deplacement(60, -90);
-    deplacement(80, 47);
+    deplacement(80, 45);
     deplacement(80, -180);
-    deplacement(60, -47);
+    deplacement(60, -45);
     deplacement(180, 90);
     deplacement(90, -40);
-    deplacement(85, -90);
+    deplacement(95, -90);
     deplacement(115, 90);
     
-    */
+    
     
   }
 }
@@ -72,7 +72,7 @@ void deplacement(float distance, float angle)
   
   const float distance_en_pulse = distance * PULSE_PAR_CM; //transformation de la distance en cm vers une distance en pulses
   const int sens_rotation = angle / abs(angle);//variable pour déterminer le sens de rotation
-  const int arc_en_pulse = (abs(angle) / TOUR_DEGRE) * CIRCONFERENCE_ENTRE_2_ROUES * PULSE_PAR_CM; //transformation de l'angle degrés vers la distance d'un arc en pulse
+  const int arc_en_pulse = ((abs(angle) / TOUR_DEGRE) * CIRCONFERENCE_ENTRE_2_ROUES * PULSE_PAR_CM); //transformation de l'angle degrés vers la distance d'un arc en pulse
   /*
   Serial.print("Sensrotation  ");
   Serial.print(sens_rotation);
