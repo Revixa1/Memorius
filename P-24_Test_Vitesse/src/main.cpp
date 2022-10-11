@@ -2,11 +2,11 @@
 #include <librobus.h>
 #include <math.h>
 
-#define CIRCONFERENCE_ENTRE_2_ROUES (18.80000000000000000000000000 * PI) // la circonférence en cm du cercle fait par les deux roues lors d'une rotation de 1 tour
-#define PULSE_PAR_CM (3200.0000 / 23.9389000000000000000000000000)         // nombre de pulse par tour/circonférence d'une roue en cm
+#define CIRCONFERENCE_ENTRE_2_ROUES (18.60000000000000000000000000 * PI) // la circonférence en cm du cercle fait par les deux roues lors d'une rotation de 1 tour
+#define PULSE_PAR_CM (3200.0000 / 23.9389000000000)         // nombre de pulse par tour/circonférence d'une roue en cm
 #define TOUR_DEGRE 360.0000                          // nombre de degré dans 1 tour
 
-int LS_Arriere = 28; // pin de la limite switch arrière
+//int LS_Arriere = 28; // pin de la limite switch arrière  
 
 void deplacement(float, float); // prototype de la fonction de déplacement
 
@@ -14,14 +14,14 @@ void setup()
 {
 
   BoardInit();                // fonction d'initialisation de librobus
-  pinMode(LS_Arriere, INPUT); // activer la pin de la limite switch arrière en tant qu'entrée
+ // pinMode(LS_Arriere, INPUT); // activer la pin de la limite switch arrière en tant qu'entrée
   Serial.begin(115200);
 }
 
 void loop()
 {
 
-  if (digitalRead(LS_Arriere) == HIGH)
+  if (ROBUS_IsBumper(3)==HIGH)
   {                            // si la limit switch arrère est pesé, on rentre dans le if
     /*
     deplacement(0,-360);
@@ -94,6 +94,7 @@ void deplacement(float distance, float angle)
   float ajout_de_vitesse = 0; //déclaration + reset de la réponse du PID
   int cycle = 1;          //déclaration + reset du nombre de cycles du PID
   int briser=0;
+
   if (angle != 0)
   {
     ENCODER_Reset(0); //on reset les encodeurs avant de bouger
