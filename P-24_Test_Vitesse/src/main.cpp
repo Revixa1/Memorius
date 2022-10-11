@@ -99,7 +99,7 @@ void deplacement(float distance, float angle)
   {
     ENCODER_Reset(0); //on reset les encodeurs avant de bouger
     ENCODER_Reset(1);
-    MOTOR_SetSpeed(0, sens_rotation * vitesse+0.05);//on démare les moteur à la vitesse de départ et dans le sens de rotation approprié. Angle - = vitesse roue gauche est négative
+    MOTOR_SetSpeed(0, sens_rotation * vitesse);//on démare les moteur à la vitesse de départ et dans le sens de rotation approprié. Angle - = vitesse roue gauche est négative
     MOTOR_SetSpeed(1, -1 * sens_rotation * vitesse);//Angle positif = vitesse roue droite est négative
 
     if(sens_rotation>0){//rotation vers la droite
