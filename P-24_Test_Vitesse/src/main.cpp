@@ -184,7 +184,7 @@ void deplacement(float distance, float angle)
     }
     MOTOR_SetSpeed(0, 0);//on arrête les moteur une fois arrivé
     MOTOR_SetSpeed(1, 0);
-    delay(100);//un délais pour une transition "smooth" (peu être changé)
+    delay(70);//un délais pour une transition "smooth" (peu être changé)
   }
   /*
   Serial.print("  arc_en_pulse  ");
@@ -254,7 +254,7 @@ void deplacement(float distance, float angle)
      // Serial.print(",");
       
       //Section accélération
-       if(somme_pulse_gauche<=distance_en_pulse/3 && acceleration<0.95)//pour le premier tier de la distance, accélérer avec une pente constante
+       if(somme_pulse_gauche<=distance_en_pulse/3 && acceleration<0.69)//pour le premier tier de la distance, accélérer avec une pente constante
       {
         acceleration+=0.01; //acceleration=0.65*(somme_pulse_gauche/(distance_en_pulse/3))+0.2
       }
@@ -262,9 +262,9 @@ void deplacement(float distance, float angle)
       {
       
       }
-       if((somme_pulse_gauche/100)>(distance_en_pulse/100)-((acceleration-0.2)/0.025) && acceleration>0.15)//pour le dernier tier de la distance, décélérer avec une pente constante
+       if((somme_pulse_gauche/100)>(distance_en_pulse/100)-((acceleration-0.2)/0.020) && acceleration>0.15)//pour le dernier tier de la distance, décélérer avec une pente constante
       {
-       acceleration-=0.025; //acceleration-=1*(((distance_en_pulse/100)-(somme_pulse_gauche/100))*((distance_en_pulse/100)-(somme_pulse_gauche/100))); // acceleration=-1.2*((somme_pulse_gauche-(2*distance_en_pulse/3))/(2*distance_en_pulse/3))+acceleration
+       acceleration-=0.020; //acceleration-=1*(((distance_en_pulse/100)-(somme_pulse_gauche/100))*((distance_en_pulse/100)-(somme_pulse_gauche/100))); // acceleration=-1.2*((somme_pulse_gauche-(2*distance_en_pulse/3))/(2*distance_en_pulse/3))+acceleration
       }
       
       Serial.print("somme_pulse_gauche ");
@@ -284,6 +284,6 @@ void deplacement(float distance, float angle)
     }
     MOTOR_SetSpeed(0, 0); //une fois le trajet complèté arrêter les moteurs
     MOTOR_SetSpeed(1, 0);
-    delay(100); // laisser un délais pour une transition "smooth" entre deux déplacements
+    delay(70); // laisser un délais pour une transition "smooth" entre deux déplacements
   }
 }
