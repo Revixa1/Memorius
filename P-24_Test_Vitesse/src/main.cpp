@@ -6,9 +6,57 @@
 #define PULSE_PAR_CM (3200.0000 / 23.9389000000000000000000000000)         // nombre de pulse par tour/circonférence d'une roue en cm
 #define TOUR_DEGRE 360.0000                          // nombre de degré dans 1 tour
 
+#define LINE 1
+#define ANGLE 0
+#define DIM_M 23
+#define DIM_N 2
+
+// ================================================================================================================================
+//                                                  Constantes et variables de distance
+// ================================================================================================================================
+
+#define TRACK_WIDTH 18.7              // Distance [cm] entre les deux roues (24A: 18.7 cm, 24B: 18.6 cm)
+#define WHEEL_DIA_IN 3                // Diamètre [po] des roues
+#define NB_PULSES_PER_REV_WHEEL 3200  // Nombre de pulses envoyés par les encodeurs pour une révolution des roues
+#define IN_TO_CM 2.54                 // Constante de conversion: pouces -> cm
+
+#define COURSE_WIDTH 45               // Largeur constante du parcours [cm]
+
+/* Définition des termes calculés concernant les roues */
+#define CIRC_WHEEL_CM (PI * WHEEL_DIA_IN * IN_TO_CM)              // Circonférence [cm] des roues
+#define DIST_PER_PULSE (CIRC_WHEEL_CM / NB_PULSES_PER_REV_WHEEL)  // Distance parcourue [cm] pour un pulse de l'encodeur
+
 int LS_Arriere = 28; // pin de la limite switch arrière
 
-void deplacement(float, float); // prototype de la fonction de déplacement
+long int dist2PulsesLin(int type, float value);
+void deplacement(float prevAngle, float distance, float nextAngle, float angle); // prototype de la fonction de déplacement
+
+const float MATRICE_P[DIM_M][DIM_N] = 
+  {
+    {LINE,100+2},
+    {ANGLE,-90},
+    {LINE,45+4},
+    {ANGLE,90},
+    {LINE,65+2},
+    {ANGLE,40.4},
+    {LINE,153+2},
+    {ANGLE,-90},
+    {LINE,44+2},
+    {ANGLE,45},
+    {LINE,90+2},
+    {ANGLE,180},
+    {LINE,90+2},
+    {ANGLE,-45},
+    {LINE,44+2},
+    {ANGLE,90},
+    {LINE,153+4},
+    {ANGLE,-40.4},
+    {LINE,65+2},
+    {ANGLE,-90},
+    {LINE,45+4},
+    {ANGLE,90},
+    {LINE,100+2}
+  };
 
 void setup()
 {
@@ -20,57 +68,61 @@ void setup()
 
 void loop()
 {
-
-  if (digitalRead(LS_Arriere) == HIGH)
-  {                            // si la limit switch arrère est pesé, on rentre dans le if
-    /*
-    deplacement(0,-360);
-    deplacement(0,720);
-    deplacement(0,-360);
-    */
-   /*
-    deplacement(0,-180);
-    deplacement(0,360);
-    deplacement(0,-180);
-    delay(500);
-    deplacement(0,-90);
-    deplacement(0,180);
-    
-    deplacement(0,-90);
-    delay(500);
-    deplacement(0,-45);
-    delay(500);
-    deplacement(0,90);
-    delay(500);
-    deplacement(0,-45);
-    */
-    
-    //deplacement(0,1440);
-    //deplacement(500,0);
-    
-    deplacement(122.5, 0);  // déplacement de 0° en rotation et de 122.5 cm vers l'avant
-    deplacement(95, -90);   // déplacement de -90° (70° vers la gauche) en rotation et de 95 cm vers l'avant
-    deplacement(102, 90);   // déplacement de 90° (90° vers la droite) en rotation et de 102 cm vers l'avant
-    deplacement(180, 40.4); // déplacement de 40.4° (40.4° vers la gauche) en rotation et de 180 cm vers l'avant
-    deplacement(60, -90);
-    deplacement(80, 40.4);
-    deplacement(80, -180);
-    deplacement(60, -40.4);
-    deplacement(180, 90);
-    deplacement(90, -40.4);
-    deplacement(95, -90);
-    deplacement(115, 90);
-    
-    
-    
+  // Défi du parcours
+  if(ROBUS_IsBumper(3)) // Condition de départ
+  {
+    delay(200);
+    for(int m=0;m<DIM_M;m++)
+    {
+      if(MATRICE_P[m][0] == LINE)  // Translation
+      {
+        if(m == 0)  // Départ
+        {
+          deplacement(0, MATRICE_P[0][1], MATRICE_P[1][1], 0);
+        }
+        else if(m == DIM_M - 1) // Arrivée
+        {
+          deplacement(MATRICE_P[m-1][1], MATRICE_P[m][1], 0, 0);
+        }
+        else  // Toutes les autres étapes
+        {
+          deplacement(MATRICE_P[m-1][1], MATRICE_P[m][1], MATRICE_P[m+1][1], 0);
+        }
+      }
+      else  // Rotation
+      {
+        deplacement(0, 0, 0, MATRICE_P[m][1]);
+      }
+    }
   }
 }
 
-void deplacement(float distance, float angle)
+long int dist2PulsesLin(int type, float value)
+{
+  long int dist2Pulses;
+  if(type == LINE)  // Pour les distances linéaires mesurées (lignes)
+  {
+    dist2Pulses = floor(abs(value)*PULSE_PAR_CM + 0.5);
+  }
+  else if(type == ANGLE)  // Pour les distances linéaires à parcourir dans les coins du parcours
+  {
+    if(value == 180)
+    {
+      dist2Pulses = 0;
+    }
+    else
+    {
+      dist2Pulses = floor(COURSE_WIDTH/2*tan(abs(value)*DEG_TO_RAD/2)*PULSE_PAR_CM + 0.5);
+    }
+  }
+  Serial.print("Distance ligne calculée: "); Serial.println(dist2Pulses);
+  return dist2Pulses;
+}
+
+void deplacement(float prevAngle, float distance, float nextAngle, float angle)
 { // déclaration de la fonction de déplacement
 
-  
-  const float distance_en_pulse = distance * PULSE_PAR_CM; //transformation de la distance en cm vers une distance en pulses
+  const float distance_en_pulse = dist2PulsesLin(ANGLE, prevAngle) + dist2PulsesLin(LINE, distance) + dist2PulsesLin(ANGLE, nextAngle);  //transformation de la distance en cm vers une distance en pulses
   const int sens_rotation = angle / abs(angle);//variable pour déterminer le sens de rotation
   const int arc_en_pulse = (abs(angle) / TOUR_DEGRE) * CIRCONFERENCE_ENTRE_2_ROUES * PULSE_PAR_CM; //transformation de l'angle degrés vers la distance d'un arc en pulse
   /*
