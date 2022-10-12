@@ -8,7 +8,7 @@
 
 #define LINE 1
 #define ANGLE 0
-#define DIM_M 23
+#define DIM_M 11 //23
 #define DIM_N 2
 
 // ================================================================================================================================
@@ -38,24 +38,24 @@ const float MATRICE_P[DIM_M][DIM_N] =
     {LINE,45+4},
     {ANGLE,90},
     {LINE,65+2},
-    {ANGLE,40.4},
+    {ANGLE,45},
     {LINE,153+2},
     {ANGLE,-90},
     {LINE,44+2},
     {ANGLE,45},
-    {LINE,90+2},
+    {LINE,90+2}/*,
     {ANGLE,180},
     {LINE,90+2},
     {ANGLE,-45},
     {LINE,44+2},
     {ANGLE,90},
     {LINE,153+4},
-    {ANGLE,-40.4},
+    {ANGLE,-45},
     {LINE,65+2},
     {ANGLE,-90},
     {LINE,45+4},
     {ANGLE,90},
-    {LINE,100+2}
+    {LINE,100+2}*/
   };
 
 void setup()
@@ -78,15 +78,15 @@ void loop()
       {
         if(m == 0)  // Départ
         {
-          deplacement(0, MATRICE_P[0][1], MATRICE_P[1][1], 0);
+         // deplacement(0, MATRICE_P[0][1], MATRICE_P[1][1], 0);
         }
         else if(m == DIM_M - 1) // Arrivée
         {
-          deplacement(MATRICE_P[m-1][1], MATRICE_P[m][1], 0, 0);
+          //deplacement(MATRICE_P[m-1][1], MATRICE_P[m][1], 0, 0);
         }
         else  // Toutes les autres étapes
         {
-          deplacement(MATRICE_P[m-1][1], MATRICE_P[m][1], MATRICE_P[m+1][1], 0);
+         // deplacement(MATRICE_P[m-1][1], MATRICE_P[m][1], MATRICE_P[m+1][1], 0);
         }
       }
       else  // Rotation
@@ -125,12 +125,7 @@ void deplacement(float prevAngle, float distance, float nextAngle, float angle)
   const float distance_en_pulse = dist2PulsesLin(ANGLE, prevAngle) + dist2PulsesLin(LINE, distance) + dist2PulsesLin(ANGLE, nextAngle);  //transformation de la distance en cm vers une distance en pulses
   const int sens_rotation = angle / abs(angle);//variable pour déterminer le sens de rotation
   const int arc_en_pulse = (abs(angle) / TOUR_DEGRE) * CIRCONFERENCE_ENTRE_2_ROUES * PULSE_PAR_CM; //transformation de l'angle degrés vers la distance d'un arc en pulse
-  /*
-  if (sens_rotation>0)
-  {
-    arc_en_pulse-=0;
-  }
-  */
+  
   Serial.print("Sensrotation  ");
   Serial.print(sens_rotation);
   Serial.print("  arc_en_pulse  ");
@@ -197,7 +192,7 @@ void deplacement(float prevAngle, float distance, float nextAngle, float angle)
       encodeur_voulu = (-1*sens_rotation*ENCODER_ReadReset(1));//lire la distance parcourue par la roue droite depuis le dernier reset. La valeur sera toujour positive
       encodeur_actuel =  sens_rotation*ENCODER_ReadReset(0);//lire la distance parcourue par la roue gauche depuis le dernier reset. La valeur sera toujour positive
       erreur_KP = encodeur_voulu - encodeur_actuel;//on calcule l'erreur proportionnelle
-      //somme_pulse_droit= somme_pulse_droit + encodeur_voulu;
+      somme_pulse_droit= somme_pulse_droit + encodeur_voulu;
       somme_pulse_gauche = somme_pulse_gauche + encodeur_actuel;//on trouve notre distance complète depuis le début du déplacement
       erreur_KI = (cycle * encodeur_voulu) - somme_pulse_gauche;//on calcule l'erreur de l'intégralle entre les deux courbes
       ajout_de_vitesse = KI * erreur_KI + KP * erreur_KP;//on calcule la réponse de la boucle PID. ICI nous avons seulment une réponse qui travaile sur le gain proportionnel et sur l'intégralle du procédé
@@ -221,8 +216,10 @@ void deplacement(float prevAngle, float distance, float nextAngle, float angle)
     delay(100);//un délais pour une transition "smooth" (peu être changé)
   }
   
-  Serial.print("  somme_pulse_gauche_rotation:  ");
+  Serial.print("  somme_pulse_g_rot:  ");
   Serial.print(somme_pulse_gauche);
+  Serial.print("  somme_pulse_d_rot:  ");
+  Serial.print(somme_pulse_droit);
   Serial.print("  Diff=  ");
   Serial.println(arc_en_pulse-somme_pulse_gauche);
   // delay(1000);
