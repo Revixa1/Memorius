@@ -28,7 +28,7 @@ void loop()
     deplacement(0,720);
     deplacement(0,-360);
     */
-   /*
+   
     deplacement(0,-180);
     deplacement(0,360);
     deplacement(0,-180);
@@ -43,11 +43,11 @@ void loop()
     deplacement(0,90);
     delay(500);
     deplacement(0,-45);
-    */
+    
     //deplacement(0,1440);
    // deplacement(0,-1440);
     //deplacement(500,0);
-    
+   /* 
     deplacement(122.5, 0);  // déplacement de 0° en rotation et de 122.5 cm vers l'avant
     deplacement(95, -90);   // déplacement de -90° (70° vers la gauche) en rotation et de 95 cm vers l'avant
     deplacement(100, 90);   // déplacement de 90° (90° vers la droite) en rotation et de 102 cm vers l'avant
@@ -60,7 +60,7 @@ void loop()
     deplacement(90, -40.4);
     deplacement(95, -90);
     deplacement(115, 90);
-    
+    */
     
     
   }
@@ -80,7 +80,7 @@ void deplacement(float distance, float angle)
   Serial.print(arc_en_pulse);
   */
   
-  float vitesse = 0.2; //vitesse lors de la rotation
+  float vitesse = 0.15; //vitesse lors de la rotation
   float acceleration=vitesse;//variable pour l'accélération lors d'une ligne droite
   float somme_pulse_gauche = 0;//déclaration + reset de la distance parcourue par le moteur gauche
   int somme_pulse_droit=0;
@@ -103,7 +103,7 @@ void deplacement(float distance, float angle)
     MOTOR_SetSpeed(1, -1 * sens_rotation * vitesse);//Angle positif = vitesse roue droite est négative
 
     if(sens_rotation>0){//rotation vers la droite
-      while (somme_pulse_droit <= arc_en_pulse)//tant que la distance de l'arc n'est pas atteinte, on continue la rotation vers la droite
+      while (somme_pulse_droit <= arc_en_pulse && somme_pulse_gauche <= arc_en_pulse)//tant que la distance de l'arc n'est pas atteinte, on continue la rotation vers la droite
     {
       MOTOR_SetSpeed(0, sens_rotation * (vitesse + ajout_de_vitesse));//on change la vitesse du moteur gauche selon la réponse du PID
     //  Serial.println(sens_rotation * (vitesse + ajout_de_vitesse));
@@ -128,6 +128,7 @@ void deplacement(float distance, float angle)
       */
       //Serial.print(" somme_pulse_gauche_rotation: ");
       //Serial.println(somme_pulse_gauche);
+      /*
       Serial.print("  arc_en_pulse  ");
   Serial.print(arc_en_pulse);
   Serial.print(",");
@@ -137,13 +138,13 @@ void deplacement(float distance, float angle)
   Serial.print("  somme_droit:  ");
   Serial.print(somme_pulse_droit);
   Serial.println(",");
-      
+      */
       
     }
 
     }
     else{//rotation vers la gauche
-    while (somme_pulse_droit <= arc_en_pulse)//tant que la distance de l'arc n'est pas atteinte, on continue la rotation vers la gauche
+    while (somme_pulse_droit <= arc_en_pulse && somme_pulse_gauche <= arc_en_pulse)//tant que la distance de l'arc n'est pas atteinte, on continue la rotation vers la gauche
     {
       MOTOR_SetSpeed(0, sens_rotation * (vitesse + ajout_de_vitesse));//on change la vitesse du moteur gauche selon la réponse du PID
      // Serial.println(sens_rotation * (vitesse + ajout_de_vitesse));
@@ -168,7 +169,7 @@ void deplacement(float distance, float angle)
       */
       //Serial.print(" somme_pulse_gauche_rotation: ");
       //Serial.println(somme_pulse_gauche);
-
+/*
       Serial.print("  arc_en_pulse  ");
   Serial.print(arc_en_pulse);
   Serial.print(",");
@@ -178,7 +179,7 @@ void deplacement(float distance, float angle)
   Serial.print("  somme_droit:  ");
   Serial.print(somme_pulse_droit);
   Serial.println(",");
-      
+      */
       
     }
     }
@@ -186,25 +187,25 @@ void deplacement(float distance, float angle)
     MOTOR_SetSpeed(1, 0);
     delay(70);//un délais pour une transition "smooth" (peu être changé)
   }
-  /*
+  
   Serial.print("  arc_en_pulse  ");
   Serial.print(arc_en_pulse);
-  Serial.print(",");
+ // Serial.print(",");
   Serial.print("  somme_gauche:  ");
   Serial.print(somme_pulse_gauche);
-  Serial.print(",");
+  //Serial.print(",");
   Serial.print("  somme_droit:  ");
   Serial.print(somme_pulse_droit);
-  Serial.println(",");
-  */
-  /*
+  //Serial.println(",");
+  
+  
   Serial.print("  Diff_g=  ");
   Serial.print(arc_en_pulse-somme_pulse_gauche);
   Serial.print("  Diff_d=  ");
   Serial.print(arc_en_pulse-somme_pulse_droit);
   Serial.print("  Diff_d_g=  ");
   Serial.println(somme_pulse_droit-somme_pulse_gauche);
-  */
+  
   vitesse = 0.2; // vitesse de départ lors d'une ligne droite
   acceleration=vitesse; //variable pour l'accélération lors d'une ligne droite
   somme_pulse_gauche = 0; //reset de la distance parcourue par le moteur gauche
