@@ -47,21 +47,21 @@ void loop()
     //deplacement(0,1440);
    // deplacement(0,-1440);
     //deplacement(500,0);
-    while(1){
+    
     deplacement(124, 0);  // déplacement de 0° en rotation et de 122.5 cm vers l'avant
     deplacement(95, -90);   // déplacement de -90° (70° vers la gauche) en rotation et de 95 cm vers l'avant
     deplacement(100, 90);   // déplacement de 90° (90° vers la droite) en rotation et de 102 cm vers l'avant
     deplacement(175, 45); // déplacement de 40.4° (40.4° vers la gauche) en rotation et de 180 cm vers l'avant
     deplacement(60, -90);
     deplacement(80, 45);
-    deplacement(80, -180);
+    deplacement(80, 180);
     deplacement(60, -45);
     deplacement(175, 90);
     deplacement(100, -45);
-    deplacement(70, -90);
+    deplacement(95, -90);
     deplacement(124, 90);
-    deplacement(0, -180);
-    }
+    deplacement(0, 180);
+    
     
     
   }
