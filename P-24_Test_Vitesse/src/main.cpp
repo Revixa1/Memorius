@@ -46,7 +46,7 @@ const float MATRICE_P[DIM_M][DIM_N] =
     {LINE,1},
     {ANGLE,-90+1},
     {LINE,100+4},
-    {ANGLE,180},
+    {ANGLE,180-2},
     {LINE,100+4},
     {ANGLE,90},
     {LINE,1},
