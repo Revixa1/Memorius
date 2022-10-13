@@ -54,7 +54,7 @@ void loop()
     deplacement(175, 40.4); // déplacement de 40.4° (40.4° vers la gauche) en rotation et de 180 cm vers l'avant
     deplacement(60, -90);
     deplacement(80, 45);
-    deplacement(80, -179);
+    deplacement(80, -181);
     deplacement(60, -45);
     deplacement(175, 90);
     deplacement(100, -40.4);
