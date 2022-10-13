@@ -8,7 +8,7 @@
 
 #define LINE 1
 #define ANGLE 0
-#define DIM_M 30
+#define DIM_M 27
 #define DIM_N 2
 
 // ================================================================================================================================
@@ -44,25 +44,22 @@ const float MATRICE_P[DIM_M][DIM_N] =
     {LINE,165},
     {ANGLE,90},
     {LINE,1},
-    {ANGLE,-90-1},
+    {ANGLE,-90+1},
     {LINE,100+4},
-    {ANGLE, 180},
-    {LINE,209},
-    {ANGLE, 360},
     {ANGLE,180},
-    {LINE,60},
-    {ANGLE,-90-1},
+    {LINE,100+4},
+    {ANGLE,90},
     {LINE,1},
     {ANGLE,-90-1},
     {LINE,165},
     {ANGLE,90},
-    {LINE,10-2},
+    {LINE,10-3},
     {ANGLE,-90},
     {LINE,2},
     {ANGLE,-90},
     {LINE, 55},
-    {ANGLE,90},
-    {LINE, 100+4}
+    {ANGLE, 90},
+    {LINE,100+4}
   };
 
 void setup()
@@ -139,7 +136,7 @@ void deplacement(float prevAngle, float distance, float nextAngle, float angle)
   Serial.print(arc_en_pulse);
   */
   
-  float vitesse = 0.2; //vitesse lors de la rotation
+  float vitesse = 0.25; //vitesse lors de la rotation
   float acceleration=vitesse;//variable pour l'accélération lors d'une ligne droite
   float somme_pulse_gauche = 0;//déclaration + reset de la distance parcourue par le moteur gauche
   int somme_pulse_droit=0;
