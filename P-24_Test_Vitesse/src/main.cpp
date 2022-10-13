@@ -2,77 +2,129 @@
 #include <librobus.h>
 #include <math.h>
 
-#define CIRCONFERENCE_ENTRE_2_ROUES (18.60000000000000000000000000 * PI) // la circonférence en cm du cercle fait par les deux roues lors d'une rotation de 1 tour
-#define PULSE_PAR_CM (3200.0000 / 23.9389000000000)         // nombre de pulse par tour/circonférence d'une roue en cm
+#define CIRCONFERENCE_ENTRE_2_ROUES (18.70000000000000000000000000 * PI) // la circonférence en cm du cercle fait par les deux roues lors d'une rotation de 1 tour
+#define PULSE_PAR_CM (3200.0000 / 23.9389000000000000000000000000)         // nombre de pulse par tour/circonférence d'une roue en cm
 #define TOUR_DEGRE 360.0000                          // nombre de degré dans 1 tour
 
-//int LS_Arriere = 28; // pin de la limite switch arrière  
+#define LINE 1
+#define ANGLE 0
+#define DIM_M 23
+#define DIM_N 2
 
-void deplacement(float, float); // prototype de la fonction de déplacement
+// ================================================================================================================================
+//                                                  Constantes et variables de distance
+// ================================================================================================================================
+
+#define TRACK_WIDTH 18.7              // Distance [cm] entre les deux roues (24A: 18.7 cm, 24B: 18.6 cm)
+#define WHEEL_DIA_IN 3                // Diamètre [po] des roues
+#define NB_PULSES_PER_REV_WHEEL 3200  // Nombre de pulses envoyés par les encodeurs pour une révolution des roues
+#define IN_TO_CM 2.54                 // Constante de conversion: pouces -> cm
+
+#define COURSE_WIDTH 45               // Largeur constante du parcours [cm]
+
+/* Définition des termes calculés concernant les roues */
+#define CIRC_WHEEL_CM (PI * WHEEL_DIA_IN * IN_TO_CM)              // Circonférence [cm] des roues
+#define DIST_PER_PULSE (CIRC_WHEEL_CM / NB_PULSES_PER_REV_WHEEL)  // Distance parcourue [cm] pour un pulse de l'encodeur
+
+int LS_Arriere = 28; // pin de la limite switch arrière
+
+long int dist2PulsesLin(int type, float value);
+void deplacement(float prevAngle, float distance, float nextAngle, float angle); // prototype de la fonction de déplacement
+
+const float MATRICE_P[DIM_M][DIM_N] = 
+  {
+    {LINE,100+2},
+    {ANGLE,-90},
+    {LINE,45+4},
+    {ANGLE,90},
+    {LINE,65+2},
+    {ANGLE,45},
+    {LINE,153+2},
+    {ANGLE,-90},
+    {LINE,44+2},
+    {ANGLE,45},
+    {LINE,90+2},
+    {ANGLE,180},
+    {LINE,90+2},
+    {ANGLE,-45},
+    {LINE,44+2},
+    {ANGLE,90},
+    {LINE,153+4},
+    {ANGLE,-45},
+    {LINE,65+2},
+    {ANGLE,-90},
+    {LINE,45+4},
+    {ANGLE,90},
+    {LINE,100+2}
+  };
 
 void setup()
 {
 
   BoardInit();                // fonction d'initialisation de librobus
- // pinMode(LS_Arriere, INPUT); // activer la pin de la limite switch arrière en tant qu'entrée
+  pinMode(LS_Arriere, INPUT); // activer la pin de la limite switch arrière en tant qu'entrée
   Serial.begin(115200);
 }
 
 void loop()
 {
-
-  if (ROBUS_IsBumper(3)==HIGH)
-  {                            // si la limit switch arrère est pesé, on rentre dans le if
-    /*
-    deplacement(0,-360);
-    deplacement(0,720);
-    deplacement(0,-360);
-    */
-   
-    deplacement(0,-180);
-    deplacement(0,360);
-    deplacement(0,-180);
-    delay(500);
-    deplacement(0,-90);
-    deplacement(0,180);
-    
-    deplacement(0,-90);
-    delay(500);
-    deplacement(0,-45);
-    delay(500);
-    deplacement(0,90);
-    delay(500);
-    deplacement(0,-45);
-    
-    //deplacement(0,1440);
-   // deplacement(0,-1440);
-    //deplacement(500,0);
-   /* 
-    deplacement(122.5, 0);  // déplacement de 0° en rotation et de 122.5 cm vers l'avant
-    deplacement(95, -90);   // déplacement de -90° (70° vers la gauche) en rotation et de 95 cm vers l'avant
-    deplacement(100, 90);   // déplacement de 90° (90° vers la droite) en rotation et de 102 cm vers l'avant
-    deplacement(175, 40.4); // déplacement de 40.4° (40.4° vers la gauche) en rotation et de 180 cm vers l'avant
-    deplacement(60, -90);
-    deplacement(80, 45);
-    deplacement(80, -180);
-    deplacement(60, -45);
-    deplacement(180, 90);
-    deplacement(90, -40.4);
-    deplacement(95, -90);
-    deplacement(115, 90);
-    */
-    
-    
+  // Défi du parcours
+  if(ROBUS_IsBumper(3)) // Condition de départ
+  {
+    delay(200);
+    for(int m=0;m<DIM_M;m++)
+    {
+      if(MATRICE_P[m][0] == LINE)  // Translation
+      {
+        if(m == 0)  // Départ
+        {
+          deplacement(0, MATRICE_P[0][1], MATRICE_P[1][1], 0);
+        }
+        else if(m == DIM_M - 1) // Arrivée
+        {
+          deplacement(MATRICE_P[m-1][1], MATRICE_P[m][1], 0, 0);
+        }
+        else  // Toutes les autres étapes
+        {
+          deplacement(MATRICE_P[m-1][1], MATRICE_P[m][1], MATRICE_P[m+1][1], 0);
+        }
+      }
+      else  // Rotation
+      {
+        deplacement(0, 0, 0, MATRICE_P[m][1]);
+      }
+    }
   }
 }
 
-void deplacement(float distance, float angle)
+long int dist2PulsesLin(int type, float value)
+{
+  long int dist2Pulses;
+  if(type == LINE)  // Pour les distances linéaires mesurées (lignes)
+  {
+    dist2Pulses = floor(abs(value)*PULSE_PAR_CM + 0.5);
+  }
+  else if(type == ANGLE)  // Pour les distances linéaires à parcourir dans les coins du parcours
+  {
+    if(value == 180)
+    {
+      dist2Pulses = 0;
+    }
+    else
+    {
+      dist2Pulses = floor(COURSE_WIDTH/2*tan(abs(value)*DEG_TO_RAD/2)*PULSE_PAR_CM + 0.5);
+    }
+  }
+ // Serial.print("Distance ligne calculée: "); Serial.println(dist2Pulses);
+  return dist2Pulses;
+}
+
+void deplacement(float prevAngle, float distance, float nextAngle, float angle)
 { // déclaration de la fonction de déplacement
 
-  
-  const float distance_en_pulse = distance * PULSE_PAR_CM; //transformation de la distance en cm vers une distance en pulses
+  const float distance_en_pulse = dist2PulsesLin(ANGLE, prevAngle) + dist2PulsesLin(LINE, distance) + dist2PulsesLin(ANGLE, nextAngle);  //transformation de la distance en cm vers une distance en pulses
   const int sens_rotation = angle / abs(angle);//variable pour déterminer le sens de rotation
-  const int arc_en_pulse = ((abs(angle) / TOUR_DEGRE) * CIRCONFERENCE_ENTRE_2_ROUES * PULSE_PAR_CM); //transformation de l'angle degrés vers la distance d'un arc en pulse
+  const int arc_en_pulse = (abs(angle) / TOUR_DEGRE) * CIRCONFERENCE_ENTRE_2_ROUES * PULSE_PAR_CM; //transformation de l'angle degrés vers la distance d'un arc en pulse/*
   /*
   Serial.print("Sensrotation  ");
   Serial.print(sens_rotation);
@@ -88,12 +140,16 @@ void deplacement(float distance, float angle)
   int encodeur_voulu = 0; //déclaration + reset du SetPoint du PID
   int encodeur_actuel=0;  //déclaration + reset du ProcessValue du PID
   int erreur_KP = 0;      //déclaration + reset de l'erreur proportionnel du PID
-  int erreur_KI = 0;      //déclaration + reset de l'erreur intégrale du PID
+  int erreur_KI = 0;
+  //static int erreur_KI_rot_gauche = 0;
+ // static int erreur_KI_rot_droit = 0;      //déclaration + reset de l'erreur intégrale du PID
   float KP = 0.00001;       //Valeur pour tunner le gain proportionnelle du PID
-  float KI = 0.0005;           //Valeur pour tunner le gain de l'intégrale du PID
+  float KI = 0.0005;//0.000000000005;//0.0005;           //Valeur pour tunner le gain de l'intégrale du PID
   float ajout_de_vitesse = 0; //déclaration + reset de la réponse du PID
   int cycle = 1;          //déclaration + reset du nombre de cycles du PID
   int briser=0;
+  int briser_droit=0;
+  int briser_gauche=0;
 
   if (angle != 0)
   {
@@ -107,7 +163,7 @@ void deplacement(float distance, float angle)
     {
       MOTOR_SetSpeed(0, sens_rotation * (vitesse + ajout_de_vitesse));//on change la vitesse du moteur gauche selon la réponse du PID
     //  Serial.println(sens_rotation * (vitesse + ajout_de_vitesse));
-      while(50>ENCODER_Read(1) && 50>-1*ENCODER_Read(1) && briser<arc_en_pulse){briser= -1*ENCODER_Read(1)+somme_pulse_droit;}//on attend au moins 100 pulse du moteur droit avant d'entrer dans le PID
+      while(50>ENCODER_Read(1) && 50>-1*ENCODER_Read(1) && briser<arc_en_pulse && briser_gauche<arc_en_pulse){briser= -1*ENCODER_Read(1)+somme_pulse_droit;briser_gauche= ENCODER_Read(0)+somme_pulse_gauche;}//on attend au moins 100 pulse du moteur droit avant d'entrer dans le PID
 
       //Section PID
       encodeur_voulu = (-1*sens_rotation*ENCODER_ReadReset(1));//lire la distance parcourue par la roue droite depuis le dernier reset. La valeur sera toujour positive
@@ -115,17 +171,17 @@ void deplacement(float distance, float angle)
       erreur_KP = encodeur_voulu - encodeur_actuel;//on calcule l'erreur proportionnelle
       somme_pulse_droit= somme_pulse_droit + encodeur_voulu;
       somme_pulse_gauche = somme_pulse_gauche + encodeur_actuel;//on trouve notre distance complète depuis le début du déplacement
-      erreur_KI = (cycle * encodeur_voulu) - somme_pulse_gauche;//on calcule l'erreur de l'intégralle entre les deux courbes
+      erreur_KI += somme_pulse_droit - somme_pulse_gauche;//  (cycle * encodeur_voulu)on calcule l'erreur de l'intégralle entre les deux courbes
       ajout_de_vitesse = KI * erreur_KI + KP * erreur_KP;//on calcule la réponse de la boucle PID. ICI nous avons seulment une réponse qui travaile sur le gain proportionnel et sur l'intégralle du procédé
       cycle++;//on incrémente le cycle
      
-      /*
+      
       Serial.print("pulse_gauche_rotation:");
       Serial.print(encodeur_actuel);
       Serial.print(",");
       Serial.print("pulse_droit_rotation:");
       Serial.println(encodeur_voulu);
-      */
+      
       //Serial.print(" somme_pulse_gauche_rotation: ");
       //Serial.println(somme_pulse_gauche);
       /*
@@ -148,7 +204,7 @@ void deplacement(float distance, float angle)
     {
       MOTOR_SetSpeed(0, sens_rotation * (vitesse + ajout_de_vitesse));//on change la vitesse du moteur gauche selon la réponse du PID
      // Serial.println(sens_rotation * (vitesse + ajout_de_vitesse));
-      while(50>ENCODER_Read(1) && 50>-1*ENCODER_Read(1) && briser<arc_en_pulse){briser= ENCODER_Read(1)+somme_pulse_droit;}//on attend au moins 100 pulse du moteur droit avant d'entrer dans le PID
+      while(50>ENCODER_Read(1) && 50>-1*ENCODER_Read(1) && briser_droit<arc_en_pulse && briser_gauche<arc_en_pulse){briser_droit= ENCODER_Read(1)+somme_pulse_droit;briser_gauche= ENCODER_Read(0)+somme_pulse_gauche;}//on attend au moins 100 pulse du moteur droit avant d'entrer dans le PID
 
       //Section PID
       encodeur_voulu = (-1*sens_rotation*ENCODER_ReadReset(1));//lire la distance parcourue par la roue droite depuis le dernier reset. La valeur sera toujour positive
@@ -156,17 +212,17 @@ void deplacement(float distance, float angle)
       erreur_KP = encodeur_voulu - encodeur_actuel;//on calcule l'erreur proportionnelle
       somme_pulse_droit= somme_pulse_droit + encodeur_voulu;
       somme_pulse_gauche = somme_pulse_gauche + encodeur_actuel;//on trouve notre distance complète depuis le début du déplacement
-      erreur_KI = (cycle * encodeur_voulu) - somme_pulse_gauche;//on calcule l'erreur de l'intégralle entre les deux courbes
+      erreur_KI += somme_pulse_droit - somme_pulse_gauche;//  (cycle * encodeur_voulu)on calcule l'erreur de l'intégralle entre les deux courbes
       ajout_de_vitesse = KI * erreur_KI + KP * erreur_KP;//on calcule la réponse de la boucle PID. ICI nous avons seulment une réponse qui travaile sur le gain proportionnel et sur l'intégralle du procédé
       cycle++;//on incrémente le cycle
      
-      /*
+      
       Serial.print("pulse_gauche_rotation:");
       Serial.print(encodeur_actuel);
       Serial.print(",");
       Serial.print("pulse_droit_rotation:");
       Serial.println(encodeur_voulu);
-      */
+      
       //Serial.print(" somme_pulse_gauche_rotation: ");
       //Serial.println(somme_pulse_gauche);
 /*
@@ -187,7 +243,7 @@ void deplacement(float distance, float angle)
     MOTOR_SetSpeed(1, 0);
     delay(70);//un délais pour une transition "smooth" (peu être changé)
   }
-  
+  /*
   Serial.print("  arc_en_pulse  ");
   Serial.print(arc_en_pulse);
  // Serial.print(",");
@@ -197,15 +253,15 @@ void deplacement(float distance, float angle)
   Serial.print("  somme_droit:  ");
   Serial.print(somme_pulse_droit);
   //Serial.println(",");
-  
-  
+  */
+  /*
   Serial.print("  Diff_g=  ");
   Serial.print(arc_en_pulse-somme_pulse_gauche);
   Serial.print("  Diff_d=  ");
   Serial.print(arc_en_pulse-somme_pulse_droit);
   Serial.print("  Diff_d_g=  ");
   Serial.println(somme_pulse_droit-somme_pulse_gauche);
-  
+  */
   vitesse = 0.2; // vitesse de départ lors d'une ligne droite
   acceleration=vitesse; //variable pour l'accélération lors d'une ligne droite
   somme_pulse_gauche = 0; //reset de la distance parcourue par le moteur gauche
@@ -267,7 +323,7 @@ void deplacement(float distance, float angle)
       {
        acceleration-=0.020; //acceleration-=1*(((distance_en_pulse/100)-(somme_pulse_gauche/100))*((distance_en_pulse/100)-(somme_pulse_gauche/100))); // acceleration=-1.2*((somme_pulse_gauche-(2*distance_en_pulse/3))/(2*distance_en_pulse/3))+acceleration
       }
-      
+      /*
       Serial.print("somme_pulse_gauche ");
       Serial.print(somme_pulse_gauche);
       Serial.print(",");
@@ -277,7 +333,7 @@ void deplacement(float distance, float angle)
       Serial.print(" distance_en_pulse  ");
       Serial.println(distance_en_pulse);
       //Serial.print(",");
-      
+      */
       /*
       Serial.print("  acceleration  ");
       Serial.println(acceleration);
