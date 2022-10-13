@@ -8,7 +8,7 @@
 
 #define LINE 1
 #define ANGLE 0
-#define DIM_M 30
+#define DIM_M 31
 #define DIM_N 2
 
 // ================================================================================================================================
@@ -41,13 +41,14 @@ const float MATRICE_P[DIM_M][DIM_N] =
     {ANGLE,90},
     {LINE,10-3},
     {ANGLE,-90-4},
-    {LINE,165},
+    {LINE,165-1.5},
     {ANGLE,90},
     {LINE,0.05},
     {ANGLE,-90+1},
     {LINE,100+4},
     {ANGLE,180},
     {LINE,209},
+    {ANGLE,180},
     {ANGLE,180},
     {ANGLE,180},
     {LINE,60},
