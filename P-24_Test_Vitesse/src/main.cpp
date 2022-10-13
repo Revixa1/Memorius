@@ -132,7 +132,7 @@ void deplacement(float prevAngle, float distance, float nextAngle, float angle)
   Serial.print(arc_en_pulse);
   */
   
-  float vitesse = 0.25; //vitesse lors de la rotation
+  float vitesse = 0.2; //vitesse lors de la rotation
   float acceleration=vitesse;//variable pour l'accélération lors d'une ligne droite
   float somme_pulse_gauche = 0;//déclaration + reset de la distance parcourue par le moteur gauche
   int somme_pulse_droit=0;
