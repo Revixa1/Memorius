@@ -8,7 +8,7 @@
 
 #define LINE 1
 #define ANGLE 0
-#define DIM_M 23
+#define DIM_M 30
 #define DIM_N 2
 
 // ================================================================================================================================
@@ -33,29 +33,36 @@ void deplacement(float prevAngle, float distance, float nextAngle, float angle);
 
 const float MATRICE_P[DIM_M][DIM_N] = 
   {
-    {LINE,100+2},
+    {LINE,100},
     {ANGLE,-90},
-    {LINE,45+4},
+    {LINE,55},
     {ANGLE,90},
-    {LINE,65+2},
-    {ANGLE,45},
-    {LINE,153+4},
-    {ANGLE,-90},
-    {LINE,44+2},
-    {ANGLE,45},
-    {LINE,90+2},
+    {LINE,2},
+    {ANGLE,90},
+    {LINE,10-3},
+    {ANGLE,-90-2},
+    {LINE,165},
+    {ANGLE,90},
+    {LINE,1},
+    {ANGLE,-90-1},
+    {LINE,100+4},
+    {ANGLE, 180},
+    {LINE,209},
+    {ANGLE, 360},
     {ANGLE,180},
-    {LINE,90+2},
-    {ANGLE,-45},
-    {LINE,44+2},
+    {LINE,60},
+    {ANGLE,-90-1},
+    {LINE,1},
+    {ANGLE,-90-1},
+    {LINE,165},
     {ANGLE,90},
-    {LINE,153+4},
-    {ANGLE,-45},
-    {LINE,65+2},
+    {LINE,10-2},
     {ANGLE,-90},
-    {LINE,45+4},
+    {LINE,2},
+    {ANGLE,-90},
+    {LINE, 55},
     {ANGLE,90},
-    {LINE,100+2}
+    {LINE, 100+4}
   };
 
 void setup()
