@@ -2,8 +2,8 @@
 #include <librobus.h>
 #include <math.h>
 
-#define CIRCONFERENCE_ENTRE_2_ROUES (18.70000000000000000000000000 * PI) // la circonférence en cm du cercle fait par les deux roues lors d'une rotation de 1 tour
-#define PULSE_PAR_CM (3200.0000 / 23.9389000000000000000000000000)         // nombre de pulse par tour/circonférence d'une roue en cm
+#define CIRCONFERENCE_ENTRE_2_ROUES (18.7 * PI) // la circonférence en cm du cercle fait par les deux roues lors d'une rotation de 1 tour
+#define PULSE_PAR_CM (3200.0000 / 23.9389)         // nombre de pulse par tour/circonférence d'une roue en cm
 #define TOUR_DEGRE 360.0000                          // nombre de degré dans 1 tour
 
 #define LINE 1
@@ -44,7 +44,7 @@ const float MATRICE_P[DIM_M][DIM_N] =
     {LINE,165-1.5},
     {ANGLE,90},
     {LINE,0.05},
-    {ANGLE,-90+2.5},
+    {ANGLE,-90+2.50},
     {LINE,100+4},
     {ANGLE,180},
     {LINE,209},
