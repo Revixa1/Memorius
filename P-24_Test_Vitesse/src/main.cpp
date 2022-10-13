@@ -51,16 +51,16 @@ void loop()
     deplacement(124, 0);  // déplacement de 0° en rotation et de 122.5 cm vers l'avant
     deplacement(95, -90);   // déplacement de -90° (70° vers la gauche) en rotation et de 95 cm vers l'avant
     deplacement(100, 90);   // déplacement de 90° (90° vers la droite) en rotation et de 102 cm vers l'avant
-    deplacement(175, 40.4); // déplacement de 40.4° (40.4° vers la gauche) en rotation et de 180 cm vers l'avant
+    deplacement(175, 45); // déplacement de 40.4° (40.4° vers la gauche) en rotation et de 180 cm vers l'avant
     deplacement(60, -90);
     deplacement(80, 45);
-    deplacement(80, -181);
+    deplacement(80, -181.5);
     deplacement(60, -45);
     deplacement(175, 90);
-    deplacement(100, -40.4);
+    deplacement(100, -45);
     deplacement(70, -90);
     deplacement(124, 90);
-    deplacement(0, -179);
+    deplacement(0, -179.5);
     }
     
     
@@ -90,7 +90,7 @@ void deplacement(float distance, float angle)
   int encodeur_actuel=0;  //déclaration + reset du ProcessValue du PID
   int erreur_KP = 0;      //déclaration + reset de l'erreur proportionnel du PID
   int erreur_KI = 0;      //déclaration + reset de l'erreur intégrale du PID
-  float KP = 0.00001;       //Valeur pour tunner le gain proportionnelle du PID
+  float KP = 0.0000001;//0.00001;       //Valeur pour tunner le gain proportionnelle du PID
   float KI = 0.0005;           //Valeur pour tunner le gain de l'intégrale du PID
   float ajout_de_vitesse = 0; //déclaration + reset de la réponse du PID
   int cycle = 1;          //déclaration + reset du nombre de cycles du PID
