@@ -47,20 +47,21 @@ void loop()
     //deplacement(0,1440);
    // deplacement(0,-1440);
     //deplacement(500,0);
-    
-    deplacement(122.5, 0);  // déplacement de 0° en rotation et de 122.5 cm vers l'avant
+    while(1){
+    deplacement(124, 0);  // déplacement de 0° en rotation et de 122.5 cm vers l'avant
     deplacement(95, -90);   // déplacement de -90° (70° vers la gauche) en rotation et de 95 cm vers l'avant
     deplacement(100, 90);   // déplacement de 90° (90° vers la droite) en rotation et de 102 cm vers l'avant
     deplacement(175, 40.4); // déplacement de 40.4° (40.4° vers la gauche) en rotation et de 180 cm vers l'avant
     deplacement(60, -90);
     deplacement(80, 45);
-    deplacement(80, -180);
+    deplacement(80, -179);
     deplacement(60, -45);
-    deplacement(180, 90);
-    deplacement(90, -40.4);
-    deplacement(95, -90);
-    deplacement(115, 90);
-    
+    deplacement(175, 90);
+    deplacement(100, -40.4);
+    deplacement(70, -90);
+    deplacement(124, 90);
+    deplacement(0, -179);
+    }
     
     
   }
@@ -214,7 +215,7 @@ void deplacement(float distance, float angle)
   erreur_KP = 0; //reset de l'erreur proportionnel du PID
   erreur_KI = 0; //reset de l'erreur intégrale du PID
   KP = 0.0000001; //Valeur pour tunner le gain proportionnelle du PID
-  KI = 0.0005; //Valeur pour tunner le gain de l'intégrale du PID(0.00000000001)
+  KI = 0.0001; //Valeur pour tunner le gain de l'intégrale du PID(0.00000000001)
   ajout_de_vitesse = 0; //reset de la réponse du PID
   cycle = 1; //reset du nombre de cycles du PID
   briser=0;
