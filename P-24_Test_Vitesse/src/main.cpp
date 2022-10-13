@@ -39,7 +39,7 @@ const float MATRICE_P[DIM_M][DIM_N] =
     {ANGLE,90},
     {LINE,65+2},
     {ANGLE,45},
-    {LINE,153+2},
+    {LINE,153+4},
     {ANGLE,-90},
     {LINE,44+2},
     {ANGLE,45},
@@ -132,7 +132,7 @@ void deplacement(float prevAngle, float distance, float nextAngle, float angle)
   Serial.print(arc_en_pulse);
   */
   
-  float vitesse = 0.15; //vitesse lors de la rotation
+  float vitesse = 0.25; //vitesse lors de la rotation
   float acceleration=vitesse;//variable pour l'accélération lors d'une ligne droite
   float somme_pulse_gauche = 0;//déclaration + reset de la distance parcourue par le moteur gauche
   int somme_pulse_droit=0;
@@ -144,7 +144,7 @@ void deplacement(float prevAngle, float distance, float nextAngle, float angle)
   //static int erreur_KI_rot_gauche = 0;
  // static int erreur_KI_rot_droit = 0;      //déclaration + reset de l'erreur intégrale du PID
   float KP = 0.00001;       //Valeur pour tunner le gain proportionnelle du PID
-  float KI = 0.0005;//0.000000000005;//0.0005;           //Valeur pour tunner le gain de l'intégrale du PID
+  float KI = 0.0000005;//0.0005;           //Valeur pour tunner le gain de l'intégrale du PID
   float ajout_de_vitesse = 0; //déclaration + reset de la réponse du PID
   int cycle = 1;          //déclaration + reset du nombre de cycles du PID
   int briser=0;
@@ -311,7 +311,7 @@ void deplacement(float prevAngle, float distance, float nextAngle, float angle)
      // Serial.print(",");
       
       //Section accélération
-       if(somme_pulse_gauche<=distance_en_pulse/3 && acceleration<0.69)//pour le premier tier de la distance, accélérer avec une pente constante
+       if(somme_pulse_gauche<=distance_en_pulse/3 && acceleration<0.8)//pour le premier tier de la distance, accélérer avec une pente constante
       {
         acceleration+=0.01; //acceleration=0.65*(somme_pulse_gauche/(distance_en_pulse/3))+0.2
       }
