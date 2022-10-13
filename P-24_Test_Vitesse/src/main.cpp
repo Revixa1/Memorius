@@ -2,8 +2,8 @@
 #include <librobus.h>
 #include <math.h>
 
-#define CIRCONFERENCE_ENTRE_2_ROUES (18.80000000000000000000000000 * PI) // la circonférence en cm du cercle fait par les deux roues lors d'une rotation de 1 tour
-#define PULSE_PAR_CM (3200.0000 / 23.9389000000000000000000000000)         // nombre de pulse par tour/circonférence d'une roue en cm
+#define CIRCONFERENCE_ENTRE_2_ROUES (18.80 * PI) // la circonférence en cm du cercle fait par les deux roues lors d'une rotation de 1 tour
+#define PULSE_PAR_CM (3200.0000 / 23.9389)         // nombre de pulse par tour/circonférence d'une roue en cm
 #define TOUR_DEGRE 360.0000                          // nombre de degré dans 1 tour
 
 //int LS_Arriere = 28; // pin de la limite switch arrière
