@@ -2,7 +2,7 @@
 #include <librobus.h>
 #include <math.h>
 
-#define CIRCONFERENCE_ENTRE_2_ROUES (18.70 * PI) // la circonférence en cm du cercle fait par les deux roues lors d'une rotation de 1 tour
+#define CIRCONFERENCE_ENTRE_2_ROUES (18.65 * PI) // la circonférence en cm du cercle fait par les deux roues lors d'une rotation de 1 tour
 #define PULSE_PAR_CM (3200.0000 / 23.9389)         // nombre de pulse par tour/circonférence d'une roue en cm
 #define TOUR_DEGRE 360.0000                          // nombre de degré dans 1 tour
 
@@ -48,19 +48,21 @@ void loop()
    // deplacement(0,-1440);
     //deplacement(500,0);
     
-    deplacement(124, 0);  // déplacement de 0° en rotation et de 122.5 cm vers l'avant
-    deplacement(95, -90);   // déplacement de -90° (70° vers la gauche) en rotation et de 95 cm vers l'avant
-    deplacement(100, 90);   // déplacement de 90° (90° vers la droite) en rotation et de 102 cm vers l'avant
-    deplacement(175, 45); // déplacement de 40.4° (40.4° vers la gauche) en rotation et de 180 cm vers l'avant
-    deplacement(60, -90);
-    deplacement(80, 45);
-    deplacement(80, 180);
-    deplacement(60, -45);
-    deplacement(175, 90);
-    deplacement(100, -45);
-    deplacement(95, -90);
-    deplacement(124, 90);
-    deplacement(0, 180);
+    deplacement(122.5, 0);  // déplacement de 0° en rotation et de 122.5 cm vers l'avant
+    deplacement(100, -90);   // déplacement de -90° (70° vers la gauche) en rotation et de 95 cm vers l'avant
+    deplacement(45, 90);   // déplacement de 90° (90° vers la droite) en rotation et de 102 cm vers l'avant
+    deplacement(55, 90); // déplacement de 40.4° (40.4° vers la gauche) en rotation et de 180 cm vers l'avant
+    deplacement(210, -90);
+    deplacement(42.5, 90);
+    deplacement(122.5, -92);
+    deplacement(122.5, 180);
+    deplacement(42.5, 90);
+    deplacement(210, -90);
+    deplacement(50, 88);
+    deplacement(40, -90);
+    deplacement(100, -90);
+    deplacement(122.5, 92);
+    
     
     
     
@@ -81,7 +83,7 @@ void deplacement(float distance, float angle)
   Serial.print(arc_en_pulse);
   */
   
-  float vitesse = 0.2; //vitesse lors de la rotation
+  float vitesse = 0.15; //vitesse lors de la rotation
   float acceleration=vitesse;//variable pour l'accélération lors d'une ligne droite
   float somme_pulse_gauche = 0;//déclaration + reset de la distance parcourue par le moteur gauche
   int somme_pulse_droit=0;
@@ -90,7 +92,7 @@ void deplacement(float distance, float angle)
   int encodeur_actuel=0;  //déclaration + reset du ProcessValue du PID
   int erreur_KP = 0;      //déclaration + reset de l'erreur proportionnel du PID
   int erreur_KI = 0;      //déclaration + reset de l'erreur intégrale du PID
-  float KP = 0.0000001;//0.00001;       //Valeur pour tunner le gain proportionnelle du PID
+  float KP = 0.00001;//0.00001;       //Valeur pour tunner le gain proportionnelle du PID
   float KI = 0.0005;           //Valeur pour tunner le gain de l'intégrale du PID
   float ajout_de_vitesse = 0; //déclaration + reset de la réponse du PID
   int cycle = 1;          //déclaration + reset du nombre de cycles du PID
@@ -119,16 +121,16 @@ void deplacement(float distance, float angle)
       ajout_de_vitesse = KI * erreur_KI + KP * erreur_KP;//on calcule la réponse de la boucle PID. ICI nous avons seulment une réponse qui travaile sur le gain proportionnel et sur l'intégralle du procédé
       cycle++;//on incrémente le cycle
      
-      /*
+      
       Serial.print("pulse_gauche_rotation:");
       Serial.print(encodeur_actuel);
       Serial.print(",");
       Serial.print("pulse_droit_rotation:");
       Serial.println(encodeur_voulu);
-      */
+      
       //Serial.print(" somme_pulse_gauche_rotation: ");
       //Serial.println(somme_pulse_gauche);
-      Serial.print("  arc_en_pulse  ");
+  /*Serial.print("  arc_en_pulse  ");
   Serial.print(arc_en_pulse);
   Serial.print(",");
   Serial.print("  somme_gauche:  ");
@@ -137,6 +139,7 @@ void deplacement(float distance, float angle)
   Serial.print("  somme_droit:  ");
   Serial.print(somme_pulse_droit);
   Serial.println(",");
+  */
       
       
     }
@@ -159,16 +162,16 @@ void deplacement(float distance, float angle)
       ajout_de_vitesse = KI * erreur_KI + KP * erreur_KP;//on calcule la réponse de la boucle PID. ICI nous avons seulment une réponse qui travaile sur le gain proportionnel et sur l'intégralle du procédé
       cycle++;//on incrémente le cycle
      
-      /*
+      
       Serial.print("pulse_gauche_rotation:");
       Serial.print(encodeur_actuel);
       Serial.print(",");
       Serial.print("pulse_droit_rotation:");
       Serial.println(encodeur_voulu);
-      */
+      
       //Serial.print(" somme_pulse_gauche_rotation: ");
       //Serial.println(somme_pulse_gauche);
-
+/*
       Serial.print("  arc_en_pulse  ");
   Serial.print(arc_en_pulse);
   Serial.print(",");
@@ -178,7 +181,7 @@ void deplacement(float distance, float angle)
   Serial.print("  somme_droit:  ");
   Serial.print(somme_pulse_droit);
   Serial.println(",");
-      
+      */
       
     }
     }
