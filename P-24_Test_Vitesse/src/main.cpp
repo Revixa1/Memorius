@@ -228,6 +228,8 @@ void pid(float *);  // PID 1 moteur avec erreur sur l'orientation
 void depart();
 void deplacement();
 void danse();
+void danse2();
+void danse3();
 
 void getLigne(bool dLigne[8]);
 
@@ -251,7 +253,7 @@ void setup()
 
 void loop()
 {
-  char tache = '1';
+  char tache = '3';
   if (ROBUS_IsBumper(3))
   {
 
@@ -261,7 +263,7 @@ void loop()
       switch (tache)
       {
 
-      case '1': //déplacement
+      case '3': //déplacement
         while (1)
         {
           tache='0';
@@ -273,9 +275,22 @@ void loop()
         }
         break;
 
-       case '4': //danse
+       case '4': //danse1
         tache='0';
         danse();
+        comMarketing('2');
+        break;
+
+
+      case '5': //danse2
+        tache='0';
+        danse2();
+        comMarketing('2');
+        break;
+
+      case '6': //danse3
+        tache='0';
+        danse3();
         comMarketing('2');
         break;
 
@@ -474,8 +489,7 @@ void depart()
   bool orrientation_trouve = 0;
 
   int ligne_reached = 0;
-  bool ligne_reached_g = 0;
-  bool ligne_reached_d = 0;
+
   while (orrientation_trouve == 0)
   {
 
@@ -484,6 +498,8 @@ void depart()
       MOTOR_SetSpeed(0, 0.15);
       MOTOR_SetSpeed(1, 0.15);
       ligne_reached = 0;
+      bool ligne_reached_g = 0;
+      bool ligne_reached_d = 0;
       while (ligne_reached < 2)
       {
 
@@ -604,9 +620,6 @@ void deplacement()
       //  eTheta_KI=0;
     }
   }
-  MOTOR_SetSpeed(0, -0.2);
-  MOTOR_SetSpeed(1, -0.2);
-  delay(1000);
   MOTOR_SetSpeed(0, 0);
   MOTOR_SetSpeed(1, 0);
 
@@ -629,7 +642,9 @@ void danse()
 {
 
   bool orientationclose = 0;
-
+  MOTOR_SetSpeed(0, -0.3);
+  MOTOR_SetSpeed(1, -0.3);
+  delay(1000);
   myMouvmentTime = millis();
   myMouvmentDelay = myMouvmentTime;
   MOTOR_SetSpeed(0, 0.3);
@@ -654,4 +669,77 @@ void danse()
 
   MOTOR_SetSpeed(0, 0);
   MOTOR_SetSpeed(1, 0);
+  depart();
+}
+
+void danse2(){
+
+  bool orientationclose = 0;
+  MOTOR_SetSpeed(0, -0.3);
+  MOTOR_SetSpeed(1, -0.3);
+  delay(1000);
+  myMouvmentTime = millis();
+  myMouvmentDelay = myMouvmentTime;
+  MOTOR_SetSpeed(0, 0.3);
+  MOTOR_SetSpeed(1, -0.3);
+  ENCODER_Reset(0);
+  ENCODER_Reset(1);
+
+  while (myMouvmentTime - myMouvmentDelay < 4000 or not orientationclose)
+  {
+    myMouvmentTime = millis();
+
+    cartesien();
+    if (Cart.theta > (PI / 4) - (PI / 4) and Cart.theta < (PI / 4) + (PI / 4))
+    {
+      MOTOR_SetSpeed(1, -0.15);
+      orientationclose = 1;
+    }
+    else
+    {
+      orientationclose = 0;
+      MOTOR_SetSpeed(1, -0.3);
+    } // Cart.theta>PI/4 and Cart.theta<3*PI/4){orientationclose=1;}else{orientationclose=0;}
+  }
+
+  MOTOR_SetSpeed(0, 0);
+  MOTOR_SetSpeed(1, 0);
+  depart();
+
+}
+
+void danse3(){
+
+  bool orientationclose = 0;
+  MOTOR_SetSpeed(0, -0.3);
+  MOTOR_SetSpeed(1, -0.3);
+  delay(1000);
+  myMouvmentTime = millis();
+  myMouvmentDelay = myMouvmentTime;
+  MOTOR_SetSpeed(0, 0.3);
+  MOTOR_SetSpeed(1, -0.3);
+  ENCODER_Reset(0);
+  ENCODER_Reset(1);
+
+  while (myMouvmentTime - myMouvmentDelay < 4000 or not orientationclose)
+  {
+    myMouvmentTime = millis();
+
+    cartesien();
+    if (Cart.theta > (PI / 4) - (PI / 8) and Cart.theta < (PI / 4) + (PI / 8))
+    {
+      MOTOR_SetSpeed(0, 0.15);
+      orientationclose = 1;
+    }
+    else
+    {
+      orientationclose = 0;
+      MOTOR_SetSpeed(0, 0.3);
+    } // Cart.theta>PI/4 and Cart.theta<3*PI/4){orientationclose=1;}else{orientationclose=0;}
+  }
+
+  MOTOR_SetSpeed(0, 0);
+  MOTOR_SetSpeed(1, 0);
+  depart();
+
 }

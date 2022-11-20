@@ -17,14 +17,12 @@ int comMarketing(char tache){
 char readSerial[2]={0,0};
 
 if(tache=='0'){
+    
     if(Serial.available()>0){
     for(int i=0;Serial.available()>0;i++){
     readSerial[i] =  Serial.read();
     }
     tache=readSerial[0];
-    
-    
-    
     }
     
     #ifdef TEST_COM
