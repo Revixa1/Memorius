@@ -253,9 +253,8 @@ void setup()
 
 void loop()
 {
-  char tache = '3';
-  if (ROBUS_IsBumper(3))
-  {
+  char tache = '0';
+  
 
     while (1)
     {
@@ -299,7 +298,7 @@ void loop()
         tache=comMarketing('0');
       }
     }
-  }
+  
 #ifdef DEBUGGING_CAPTEURS
   Serial.print("SRF0_1  ");
   Serial.print(SONAR_GetRange(0));
@@ -577,7 +576,7 @@ void deplacement()
   {
     myMouvmentTime = millis();
 
-    if (SONAR_GetRange(0) < 15.0 and findHuman == 0 and myMouvmentTime - myMouvmentDelay > 4000)
+    if (SONAR_GetRange(0) < 15.0 and findHuman == 0 and myMouvmentTime - myMouvmentDelay > 3000)
     {
       speed = 0;
       Cart.theta += -PI / 4;
@@ -587,6 +586,7 @@ void deplacement()
     }
     if (myMouvmentTime - myMouvmentDelay > 5000 and findHuman == 1)
     {
+      Cart.theta=PI/4;
       break;
     }
     getLigne(ligne);
@@ -640,7 +640,7 @@ void getLigne(bool dLigne[8])
 
 void danse()
 {
-
+   Cart.theta=PI/4;
   bool orientationclose = 0;
   MOTOR_SetSpeed(0, -0.3);
   MOTOR_SetSpeed(1, -0.3);
@@ -657,7 +657,7 @@ void danse()
     myMouvmentTime = millis();
 
     cartesien();
-    if (Cart.theta > (PI / 4) - (PI / 16) and Cart.theta < (PI / 4) + (PI / 16))
+    if (Cart.theta > (PI / 2) - (PI / 16) and Cart.theta < (PI / 2) + (PI / 16))
     {
       orientationclose = 1;
     }
@@ -673,33 +673,38 @@ void danse()
 }
 
 void danse2(){
+ 
 
-  bool orientationclose = 0;
   MOTOR_SetSpeed(0, -0.3);
   MOTOR_SetSpeed(1, -0.3);
   delay(1000);
-  myMouvmentTime = millis();
-  myMouvmentDelay = myMouvmentTime;
-  MOTOR_SetSpeed(0, 0.3);
-  MOTOR_SetSpeed(1, -0.3);
+
+
   ENCODER_Reset(0);
   ENCODER_Reset(1);
 
-  while (myMouvmentTime - myMouvmentDelay < 4000 or not orientationclose)
+  while (Cart.theta>0)
   {
-    myMouvmentTime = millis();
-
+   
+    MOTOR_SetSpeed(0,0.3);
+    MOTOR_SetSpeed(1,-0.3);
     cartesien();
-    if (Cart.theta > (PI / 4) - (PI / 4) and Cart.theta < (PI / 4) + (PI / 4))
-    {
-      MOTOR_SetSpeed(1, -0.15);
-      orientationclose = 1;
-    }
-    else
-    {
-      orientationclose = 0;
-      MOTOR_SetSpeed(1, -0.3);
-    } // Cart.theta>PI/4 and Cart.theta<3*PI/4){orientationclose=1;}else{orientationclose=0;}
+  }
+
+  while (Cart.theta>-PI/4 and Cart.theta<PI)
+  {
+   
+    MOTOR_SetSpeed(0,-0.3);
+    MOTOR_SetSpeed(1,0.3);
+    cartesien();
+  }
+
+  while (Cart.theta<-3*PI/4 or Cart.theta>PI/2)
+  {
+   
+    MOTOR_SetSpeed(0,0.3);
+    MOTOR_SetSpeed(1,-0.3);
+    cartesien();
   }
 
   MOTOR_SetSpeed(0, 0);
@@ -710,32 +715,37 @@ void danse2(){
 
 void danse3(){
 
-  bool orientationclose = 0;
+  
   MOTOR_SetSpeed(0, -0.3);
   MOTOR_SetSpeed(1, -0.3);
-  delay(1000);
-  myMouvmentTime = millis();
-  myMouvmentDelay = myMouvmentTime;
-  MOTOR_SetSpeed(0, 0.3);
-  MOTOR_SetSpeed(1, -0.3);
+  delay(3000);
+ 
+
   ENCODER_Reset(0);
   ENCODER_Reset(1);
 
-  while (myMouvmentTime - myMouvmentDelay < 4000 or not orientationclose)
+  while (Cart.theta>0)
   {
-    myMouvmentTime = millis();
-
+   
+    MOTOR_SetSpeed(0,0.3);
+    MOTOR_SetSpeed(1,0);
     cartesien();
-    if (Cart.theta > (PI / 4) - (PI / 8) and Cart.theta < (PI / 4) + (PI / 8))
-    {
-      MOTOR_SetSpeed(0, 0.15);
-      orientationclose = 1;
-    }
-    else
-    {
-      orientationclose = 0;
-      MOTOR_SetSpeed(0, 0.3);
-    } // Cart.theta>PI/4 and Cart.theta<3*PI/4){orientationclose=1;}else{orientationclose=0;}
+  }
+
+  while (Cart.theta>-PI/4 and Cart.theta<PI)
+  {
+   
+    MOTOR_SetSpeed(0,0);
+    MOTOR_SetSpeed(1,0.3);
+    cartesien();
+  }
+
+  while (Cart.theta<-3*PI/4 or Cart.theta>PI/2)
+  {
+   
+    MOTOR_SetSpeed(0,0.3);
+    MOTOR_SetSpeed(1,0);
+    cartesien();
   }
 
   MOTOR_SetSpeed(0, 0);
