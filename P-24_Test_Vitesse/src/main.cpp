@@ -240,7 +240,8 @@ void getLigne(bool dLigne[8]);
 void setup()
 {
   BoardInit();          // Initialisation de librobus
-  Serial.begin(115200); // Modification du Baud Rate
+  Serial.begin(9600); // Modification du Baud Rate
+  
   pinMode(LIGNE_1, INPUT);
   pinMode(LIGNE_2, INPUT);
   pinMode(LIGNE_3, INPUT);
@@ -249,6 +250,10 @@ void setup()
   pinMode(LIGNE_6, INPUT);
   pinMode(LIGNE_7, INPUT);
   pinMode(LIGNE_8, INPUT);
+  SERVO_Enable(0);
+  SERVO_Enable(1);
+  SERVO_SetAngle(0,0);
+  SERVO_SetAngle(1,180);
 }
 
 void loop()
@@ -575,6 +580,7 @@ void deplacement()
   for (point_i = 0; point_i < 101;)
   {
     myMouvmentTime = millis();
+    
 
     if (SONAR_GetRange(0) < 15.0 and findHuman == 0 and myMouvmentTime - myMouvmentDelay > 3000)
     {
@@ -586,6 +592,11 @@ void deplacement()
     }
     if (myMouvmentTime - myMouvmentDelay > 5000 and findHuman == 1)
     {
+      for (int b=0;b<2;b++){
+      for(int j=0;j<50;j++){SERVO_SetAngle(1,0+j);delay(10);}
+      for(int j=50;j>0;j--){SERVO_SetAngle(1,0+j);delay(10);}
+      }
+      SERVO_SetAngle(1,180);
       Cart.theta=PI/4;
       break;
     }
@@ -718,7 +729,7 @@ void danse3(){
   
   MOTOR_SetSpeed(0, -0.3);
   MOTOR_SetSpeed(1, -0.3);
-  delay(3000);
+  delay(2000);
  
 
   ENCODER_Reset(0);
