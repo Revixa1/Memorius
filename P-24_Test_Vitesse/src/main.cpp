@@ -19,7 +19,7 @@
 //#define DEUXIEME_TOUR
 //#define ETAT_BRAS
 //#define TEST_SANS_BRAS
-#define TEST_COM
+//#define TEST_COM
 
 #include "ComMarketing.h"
 //================================================================================================================================
