@@ -23,15 +23,15 @@ Serial1.begin(9600);
 if(Com=='0'){
     
     while (Com=='0'){
-    if(Serial.available()>0){delay(10);
-    for(int i=0;Serial.available()>0;i++){
-    readSerial[i] =  Serial.read();
+    if(Serial1.available()>0){delay(10);
+    for(int i=0;Serial1.available()>0;i++){
+    readSerial[i] =  Serial1.read();
     }
     Com=readSerial[0];
     }
     }
 
-    Serial.write('0');
+    Serial1.write('0');
     #ifdef TEST_COM
     Serial.print("read");
     Serial.println((char)Com);
@@ -49,7 +49,7 @@ if(Com!='0'){
 
         if(ComTime-PrevComTime>200 and Com!='0'){
          
-         Serial.write((char)Com);
+         Serial1.write((char)Com);
          
          
          #ifdef TEST_COM
@@ -58,9 +58,9 @@ if(Com!='0'){
          #endif
          PrevComTime=ComTime;
         } 
-        else  if(Serial.available()>0){delay(10);
-            for(int i=0;Serial.available()>0;i++){
-                 readSerial[i] =  Serial.read();
+        else  if(Serial1.available()>0){delay(10);
+            for(int i=0;Serial1.available()>0;i++){
+                 readSerial[i] =  Serial1.read();
             }
             Com=readSerial[0];
         }
