@@ -1,4 +1,4 @@
-#include <Arduino.h>
+
 //#define TEST_COM
 //0=Serial.read
 
