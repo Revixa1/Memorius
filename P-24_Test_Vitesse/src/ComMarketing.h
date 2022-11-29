@@ -34,7 +34,8 @@ if(Com=='0'){
     Serial1.write('0');
     #ifdef TEST_COM
     Serial.print("read");
-    Serial.println((char)Com);
+    Serial
+    .println((char)Com);
     #endif
     return Com;
 }
