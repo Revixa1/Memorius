@@ -1,3 +1,14 @@
+/*
+ * ----------------------------------------------------------------------------
+ * "THE BEER-WARE LICENSE" (Revision 42):
+ * <txguimont@gmail.com> and <fecm0701@usherbrooke.ca> wrote this file. As long as you retain this notice you
+ * can do whatever you want with this stuff. If we meet some day, and you think
+ * this stuff is worth it, you can buy a beer to Thomas-Xavier Guimont  (aka: TX) or a montain dew in the case of Marc-Olivier Fecto (aka: Professeur Marco)  in return
+ * ----------------------------------------------------------------------------
+ */
+
+
+
 #include <Arduino.h>
 #include <librobus.h>
 #include <math.h>
