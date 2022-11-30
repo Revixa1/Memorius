@@ -663,7 +663,7 @@ void getLigne(bool dLigne[8])
 
 void danse()
 {
-   Cart.theta=PI/4;
+   
   bool orientationclose = 0;
   MOTOR_SetSpeed(0, -0.3);
   MOTOR_SetSpeed(1, -0.3);
@@ -680,9 +680,9 @@ void danse()
     myMouvmentTime = millis();
 
     cartesien();
-    SERVO_SetAngle(0,180*sin(Cart.theta));
-    SERVO_SetAngle(1,180*cos(Cart.theta));
-    if (Cart.theta > (PI / 2) - (PI / 16) and Cart.theta < (PI / 2) + (PI / 16))
+    SERVO_SetAngle(0,180*sin(abs(Cart.theta)/2));
+    SERVO_SetAngle(1,180*cos(abs(Cart.theta)/2));
+    if (Cart.theta > (PI / 2) - (PI / 36) and Cart.theta < (PI / 2) + (PI / 36))
     {
       orientationclose = 1;
     }
@@ -714,8 +714,8 @@ void danse2(){
     MOTOR_SetSpeed(0,0.3);
     MOTOR_SetSpeed(1,-0.3);
     cartesien();
-    SERVO_SetAngle(0,180*sin(Cart.theta));
-    SERVO_SetAngle(1,180*cos(Cart.theta));
+    SERVO_SetAngle(0,180*sin(abs(Cart.theta)/2));
+    SERVO_SetAngle(1,180*cos(abs(Cart.theta)/2));
   }
 
   while (Cart.theta>-PI/4 and Cart.theta<PI)
@@ -724,8 +724,8 @@ void danse2(){
     MOTOR_SetSpeed(0,-0.3);
     MOTOR_SetSpeed(1,0.3);
     cartesien();
-    SERVO_SetAngle(0,180*sin(Cart.theta));
-    SERVO_SetAngle(1,180*cos(Cart.theta));
+    SERVO_SetAngle(0,180*sin(abs(Cart.theta)/2));
+    SERVO_SetAngle(1,180*cos(abs(Cart.theta)/2));
   }
 
   while (Cart.theta<-3*PI/4 or Cart.theta>PI/2)
@@ -734,8 +734,8 @@ void danse2(){
     MOTOR_SetSpeed(0,0.3);
     MOTOR_SetSpeed(1,-0.3);
     cartesien();
-    SERVO_SetAngle(0,180*sin(Cart.theta));
-    SERVO_SetAngle(1,180*cos(Cart.theta));
+    SERVO_SetAngle(0,180*sin(abs(Cart.theta)/2));
+    SERVO_SetAngle(1,180*cos(abs(Cart.theta)/2));
   }
 
   MOTOR_SetSpeed(0, 0);
@@ -761,8 +761,8 @@ void danse3(){
     MOTOR_SetSpeed(0,0.3);
     MOTOR_SetSpeed(1,0);
     cartesien();
-    SERVO_SetAngle(0,180*sin(Cart.theta));
-    SERVO_SetAngle(1,180*cos(Cart.theta));
+    SERVO_SetAngle(0,180*sin(abs(Cart.theta)/2));
+    SERVO_SetAngle(1,180*cos(abs(Cart.theta)/2));
   }
 
   while (Cart.theta>-PI/4 and Cart.theta<PI)
@@ -771,8 +771,8 @@ void danse3(){
     MOTOR_SetSpeed(0,0);
     MOTOR_SetSpeed(1,0.3);
     cartesien();
-    SERVO_SetAngle(0,180*sin(Cart.theta));
-    SERVO_SetAngle(1,180*cos(Cart.theta));
+    SERVO_SetAngle(0,180*sin(abs(Cart.theta)/2));
+    SERVO_SetAngle(1,180*cos(abs(Cart.theta)/2));
   }
 
   while (Cart.theta<-3*PI/4 or Cart.theta>PI/2)
@@ -781,8 +781,8 @@ void danse3(){
     MOTOR_SetSpeed(0,0.3);
     MOTOR_SetSpeed(1,0);
     cartesien();
-    SERVO_SetAngle(0,180*sin(Cart.theta));
-    SERVO_SetAngle(1,180*cos(Cart.theta));
+    SERVO_SetAngle(0,180*sin(abs(Cart.theta)/2));
+    SERVO_SetAngle(1,180*cos(abs(Cart.theta)/2));
   }
 
   MOTOR_SetSpeed(0, 0);
